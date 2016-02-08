@@ -16,5 +16,95 @@
     "customArgs" : null,
     "customSparkConf" : null
   },
-  "cells" : [ ]
+  "cells" : [ {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "import org.apache.spark._\nimport org.apache.spark.SparkContext._\nimport org.apache.spark.rdd._",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "import org.apache.spark._\nimport org.apache.spark.SparkContext._\nimport org.apache.spark.rdd._\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 1
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val rawblocks = sc.textFile(\"/Volumes/EXTRADRIVE/Spark/Analytics-with-Spark/data/donation/extracted\")\nrawblocks.count",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "rawblocks: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[7] at textFile at <console>:55\nres3: Long = 574914\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "574914"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 5
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "rawblocks.first",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "res4: String = \"id_1\",\"id_2\",\"cmp_fname_c1\",\"cmp_fname_c2\",\"cmp_lname_c1\",\"cmp_lname_c2\",\"cmp_sex\",\"cmp_bd\",\"cmp_bm\",\"cmp_by\",\"cmp_plz\",\"is_match\"\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "&quot;id_1&quot;,&quot;id_2&quot;,&quot;cmp_fname_c1&quot;,&quot;cmp_fname_c2&quot;,&quot;cmp_lname_c1&quot;,&quot;cmp_lname_c2&quot;,&quot;cmp_sex&quot;,&quot;cmp_bd&quot;,&quot;cmp_bm&quot;,&quot;cmp_by&quot;,&quot;cmp_plz&quot;,&quot;is_match&quot;"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 6
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "rawblocks.take(5).foreach(println)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "\"id_1\",\"id_2\",\"cmp_fname_c1\",\"cmp_fname_c2\",\"cmp_lname_c1\",\"cmp_lname_c2\",\"cmp_sex\",\"cmp_bd\",\"cmp_bm\",\"cmp_by\",\"cmp_plz\",\"is_match\"\n37291,53113,0.833333333333333,?,1,?,1,1,1,1,0,TRUE\n39086,47614,1,?,1,?,1,1,1,1,1,TRUE\n70031,70237,1,?,1,?,1,1,1,1,1,TRUE\n84795,97439,1,?,1,?,1,1,1,1,1,TRUE\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 8
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : true
+    },
+    "cell_type" : "code",
+    "source" : "",
+    "outputs" : [ ]
+  } ],
+  "nbformat" : 4
 }
