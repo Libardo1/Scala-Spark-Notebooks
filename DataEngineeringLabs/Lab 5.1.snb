@@ -1,0 +1,281 @@
+{
+  "metadata" : {
+    "name" : "Lab 5.1",
+    "user_save_timestamp" : "1969-12-31T16:00:00.000Z",
+    "auto_save_timestamp" : "1969-12-31T16:00:00.000Z",
+    "language_info" : {
+      "name" : "scala",
+      "file_extension" : "scala",
+      "codemirror_mode" : "text/x-scala"
+    },
+    "trusted" : true,
+    "customLocalRepo" : null,
+    "customRepos" : null,
+    "customDeps" : null,
+    "customImports" : null,
+    "customArgs" : null,
+    "customSparkConf" : null
+  },
+  "cells" : [ {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "import java.io.File\n\nimport scala.io.Source\n\nimport org.apache.log4j.Logger\nimport org.apache.log4j.Level\n\nimport org.apache.spark.SparkConf\nimport org.apache.spark.SparkContext\nimport org.apache.spark.SparkContext._\nimport org.apache.spark.rdd._\nimport org.apache.spark.mllib.recommendation.{ALS, Rating, MatrixFactorizationModel}",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "import java.io.File\nimport scala.io.Source\nimport org.apache.log4j.Logger\nimport org.apache.log4j.Level\nimport org.apache.spark.SparkConf\nimport org.apache.spark.SparkContext\nimport org.apache.spark.SparkContext._\nimport org.apache.spark.rdd._\nimport org.apache.spark.mllib.recommendation.{ALS, Rating, MatrixFactorizationModel}\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 4
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val conf = new SparkConf()\n      .setAppName(\"MovieLensALS\")\n      .set(\"spark.executor.memory\", \"2g\")\n    val sc = new SparkContext(conf)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "org.apache.spark.SparkException: A master URL must be set in your configuration\n  at org.apache.spark.SparkContext.<init>(SparkContext.scala:401)\n  ... 33 elided\n"
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Load and parse ratings\nval ratings = sc.textFile(new File(\"data/ml-1m/ratings.dat\").toString).map { line =>\n  val fields = line.split(\"::\")\n  // format: (timestamp % 10, Rating(userId, movieId, rating))\n  (fields(3).toLong % 10, Rating(fields(0).toInt, fields(1).toInt, fields(2).toDouble))\n}",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "ratings: org.apache.spark.rdd.RDD[(Long, org.apache.spark.mllib.recommendation.Rating)] = MapPartitionsRDD[5] at map at <console>:58\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "MapPartitionsRDD[5] at map at &lt;console&gt;:58"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 7
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Load and parse movies\nval movies = sc.textFile(new File(\"data/ml-1m/movies.dat\").toString).map { line =>\n      val fields = line.split(\"::\")\n      // format: (movieId, movieName)\n      (fields(0).toInt, fields(1))\n    }.collect.toMap",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "movies: scala.collection.immutable.Map[Int,String] = Map(2163 -> Attack of the Killer Tomatoes! (1980), 645 -> Nelly & Monsieur Arnaud (1995), 892 -> Twelfth Night (1996), 69 -> Friday (1995), 2199 -> Phoenix (1998), 3021 -> Funhouse, The (1981), 1322 -> Amityville 1992: It's About Time (1992), 1665 -> Bean (1997), 1036 -> Die Hard (1988), 2822 -> Medicine Man (1992), 2630 -> Besieged (L' Assedio) (1998), 3873 -> Cat Ballou (1965), 1586 -> G.I. Jane (1997), 1501 -> Keys to Tulsa (1997), 2452 -> Gate II: Trespassers, The (1990), 809 -> Fled (1996), 1879 -> Hanging Garden, The (1997), 1337 -> Body Snatcher, The (1945), 1718 -> Stranger in the House (1997), 2094 -> Rocketeer, The (1991), 3944 -> Bootmen (2000), 1411 -> Hamlet (1996), 629 -> Rude (1995), 3883 -> Catfish in Black Bean Sauce ..."
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<div>\n      <script data-this=\"{&quot;dataId&quot;:&quot;anon4f249cc2c7c8dab1c428e5805cf3e19c&quot;,&quot;dataInit&quot;:[{&quot;_1&quot;:2163,&quot;_2&quot;:&quot;Attack of the Killer Tomatoes! (1980)&quot;},{&quot;_1&quot;:645,&quot;_2&quot;:&quot;Nelly &amp; Monsieur Arnaud (1995)&quot;},{&quot;_1&quot;:892,&quot;_2&quot;:&quot;Twelfth Night (1996)&quot;},{&quot;_1&quot;:69,&quot;_2&quot;:&quot;Friday (1995)&quot;},{&quot;_1&quot;:2199,&quot;_2&quot;:&quot;Phoenix (1998)&quot;},{&quot;_1&quot;:3021,&quot;_2&quot;:&quot;Funhouse, The (1981)&quot;},{&quot;_1&quot;:1322,&quot;_2&quot;:&quot;Amityville 1992: It's About Time (1992)&quot;},{&quot;_1&quot;:1665,&quot;_2&quot;:&quot;Bean (1997)&quot;},{&quot;_1&quot;:1036,&quot;_2&quot;:&quot;Die Hard (1988)&quot;},{&quot;_1&quot;:2822,&quot;_2&quot;:&quot;Medicine Man (1992)&quot;},{&quot;_1&quot;:2630,&quot;_2&quot;:&quot;Besieged (L' Assedio) (1998)&quot;},{&quot;_1&quot;:3873,&quot;_2&quot;:&quot;Cat Ballou (1965)&quot;},{&quot;_1&quot;:1586,&quot;_2&quot;:&quot;G.I. Jane (1997)&quot;},{&quot;_1&quot;:1501,&quot;_2&quot;:&quot;Keys to Tulsa (1997)&quot;},{&quot;_1&quot;:2452,&quot;_2&quot;:&quot;Gate II: Trespassers, The (1990)&quot;},{&quot;_1&quot;:809,&quot;_2&quot;:&quot;Fled (1996)&quot;},{&quot;_1&quot;:1879,&quot;_2&quot;:&quot;Hanging Garden, The (1997)&quot;},{&quot;_1&quot;:1337,&quot;_2&quot;:&quot;Body Snatcher, The (1945)&quot;},{&quot;_1&quot;:1718,&quot;_2&quot;:&quot;Stranger in the House (1997)&quot;},{&quot;_1&quot;:2094,&quot;_2&quot;:&quot;Rocketeer, The (1991)&quot;},{&quot;_1&quot;:3944,&quot;_2&quot;:&quot;Bootmen (2000)&quot;},{&quot;_1&quot;:1411,&quot;_2&quot;:&quot;Hamlet (1996)&quot;},{&quot;_1&quot;:629,&quot;_2&quot;:&quot;Rude (1995)&quot;},{&quot;_1&quot;:3883,&quot;_2&quot;:&quot;Catfish in Black Bean Sauce (2000)&quot;},{&quot;_1&quot;:2612,&quot;_2&quot;:&quot;Mildred Pierce (1945)&quot;}],&quot;genId&quot;:&quot;155982675&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(['../javascripts/notebook/playground','../javascripts/notebook/magic/tabs'], \n      function(playground, _magictabs) {\n        // data ==> data-this (in observable.js's scopedEval) ==> this in JS => { dataId, dataInit, ... }\n        // this ==> scope (in observable.js's scopedEval) ==> this.parentElement ==> div.container below (toHtml)\n\n        playground.call(data,\n                        this\n                        ,\n                        {\n    \"f\": _magictabs,\n    \"o\": {}\n  }\n  \n                        \n                        \n                      );\n      }\n    );/*]]>*/</script>\n    <div>\n        <label for=\"input-anon3b3f13491a564f2d36b6ab0ffb2f7852\">\n      Max Points (controlling all tabs)\n    </label><input id=\"input-anon3b3f13491a564f2d36b6ab0ffb2f7852\" type=\"number\" name=\"input-anon3b3f13491a564f2d36b6ab0ffb2f7852\" data-bind=\"textInput: value, fireChange: true, valueUpdate: 'input'\">\n      <script data-selector=\"#input-anon3b3f13491a564f2d36b6ab0ffb2f7852\" data-this=\"{&quot;valueId&quot;:&quot;anon3b3f13491a564f2d36b6ab0ffb2f7852&quot;,&quot;valueInit&quot;:25}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(\n ['observable', 'knockout'],\n function (Observable, ko) {\n   //console.log(\"-----------\")\n   //console.dir(this);\n   //console.dir(valueId);\n   var obs = Observable.makeObservable(valueId)\n                       .extend({ rateLimit: { //throttle\n                                   timeout: 500,\n                                   method: \"notifyWhenChangesStop\"\n                                 }\n                               }\n                       );\n   ko.applyBindings({\n     value: obs\n   }, this);\n   obs(valueInit);\n }\n)/*]]>*/</script>\n    </input>\n        <div>\n          <ul class=\"nav nav-tabs\" id=\"ul155982675\"><li>\n                <a href=\"#tab155982675-0\"><i class=\"fa fa-table\"/></a>\n              </li></ul>\n\n          <div class=\"tab-content\" id=\"tab155982675\"><div class=\"tab-pane\" id=\"tab155982675-0\">\n              <div>\n      <script data-this=\"{&quot;dataId&quot;:&quot;anon6c95ff708fb9bd661c03595cc6cae74b&quot;,&quot;dataInit&quot;:[{&quot;_1&quot;:2163,&quot;_2&quot;:&quot;Attack of the Killer Tomatoes! (1980)&quot;},{&quot;_1&quot;:645,&quot;_2&quot;:&quot;Nelly &amp; Monsieur Arnaud (1995)&quot;},{&quot;_1&quot;:892,&quot;_2&quot;:&quot;Twelfth Night (1996)&quot;},{&quot;_1&quot;:69,&quot;_2&quot;:&quot;Friday (1995)&quot;},{&quot;_1&quot;:2199,&quot;_2&quot;:&quot;Phoenix (1998)&quot;},{&quot;_1&quot;:3021,&quot;_2&quot;:&quot;Funhouse, The (1981)&quot;},{&quot;_1&quot;:1322,&quot;_2&quot;:&quot;Amityville 1992: It's About Time (1992)&quot;},{&quot;_1&quot;:1665,&quot;_2&quot;:&quot;Bean (1997)&quot;},{&quot;_1&quot;:1036,&quot;_2&quot;:&quot;Die Hard (1988)&quot;},{&quot;_1&quot;:2822,&quot;_2&quot;:&quot;Medicine Man (1992)&quot;},{&quot;_1&quot;:2630,&quot;_2&quot;:&quot;Besieged (L' Assedio) (1998)&quot;},{&quot;_1&quot;:3873,&quot;_2&quot;:&quot;Cat Ballou (1965)&quot;},{&quot;_1&quot;:1586,&quot;_2&quot;:&quot;G.I. Jane (1997)&quot;},{&quot;_1&quot;:1501,&quot;_2&quot;:&quot;Keys to Tulsa (1997)&quot;},{&quot;_1&quot;:2452,&quot;_2&quot;:&quot;Gate II: Trespassers, The (1990)&quot;},{&quot;_1&quot;:809,&quot;_2&quot;:&quot;Fled (1996)&quot;},{&quot;_1&quot;:1879,&quot;_2&quot;:&quot;Hanging Garden, The (1997)&quot;},{&quot;_1&quot;:1337,&quot;_2&quot;:&quot;Body Snatcher, The (1945)&quot;},{&quot;_1&quot;:1718,&quot;_2&quot;:&quot;Stranger in the House (1997)&quot;},{&quot;_1&quot;:2094,&quot;_2&quot;:&quot;Rocketeer, The (1991)&quot;},{&quot;_1&quot;:3944,&quot;_2&quot;:&quot;Bootmen (2000)&quot;},{&quot;_1&quot;:1411,&quot;_2&quot;:&quot;Hamlet (1996)&quot;},{&quot;_1&quot;:629,&quot;_2&quot;:&quot;Rude (1995)&quot;},{&quot;_1&quot;:3883,&quot;_2&quot;:&quot;Catfish in Black Bean Sauce (2000)&quot;},{&quot;_1&quot;:2612,&quot;_2&quot;:&quot;Mildred Pierce (1945)&quot;}],&quot;genId&quot;:&quot;353298554&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(['../javascripts/notebook/playground','../javascripts/notebook/magic/tableChart'], \n      function(playground, _magictableChart) {\n        // data ==> data-this (in observable.js's scopedEval) ==> this in JS => { dataId, dataInit, ... }\n        // this ==> scope (in observable.js's scopedEval) ==> this.parentElement ==> div.container below (toHtml)\n\n        playground.call(data,\n                        this\n                        ,\n                        {\n    \"f\": _magictableChart,\n    \"o\": {\"headers\":[\"_1\",\"_2\"],\"width\":600,\"height\":400}\n  }\n  \n                        \n                        \n                      );\n      }\n    );/*]]>*/</script>\n    <div>\n        <label for=\"input-anon351101a30edd26ac605c9d5dc5e4ea1c\">\n      Max Points\n    </label><input id=\"input-anon351101a30edd26ac605c9d5dc5e4ea1c\" type=\"number\" name=\"input-anon351101a30edd26ac605c9d5dc5e4ea1c\" data-bind=\"textInput: value, fireChange: true, valueUpdate: 'input'\">\n      <script data-selector=\"#input-anon351101a30edd26ac605c9d5dc5e4ea1c\" data-this=\"{&quot;valueId&quot;:&quot;anon351101a30edd26ac605c9d5dc5e4ea1c&quot;,&quot;valueInit&quot;:25}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(\n ['observable', 'knockout'],\n function (Observable, ko) {\n   //console.log(\"-----------\")\n   //console.dir(this);\n   //console.dir(valueId);\n   var obs = Observable.makeObservable(valueId)\n                       .extend({ rateLimit: { //throttle\n                                   timeout: 500,\n                                   method: \"notifyWhenChangesStop\"\n                                 }\n                               }\n                       );\n   ko.applyBindings({\n     value: obs\n   }, this);\n   obs(valueInit);\n }\n)/*]]>*/</script>\n    </input>\n        <p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anonce06a82927482db7bc3eb416bde177af&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p> <span style=\"color:red\"><p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anon0f9c2f1606ef146e5eb607656a6f10d0&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p></span>\n        <div>\n        </div>\n      </div></div>\n              </div></div>\n        </div>\n      </div></div>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 8
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val numRatings = ratings.count\nval numUsers = ratings.map(_._2.user).distinct.count\nval numMovies = ratings.map(_._2.product).distinct.count\n\nprintln(\"Got \" + numRatings + \" ratings from \"\n  + numUsers + \" users on \" + numMovies + \" movies.\")",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "Got 1000209 ratings from 6040 users on 3706 movies.\nnumRatings: Long = 1000209\nnumUsers: Long = 6040\nnumMovies: Long = 3706\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 9
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Load and parse my movie rating text file\ndef loadRatings(path: String): Seq[Rating] = {\n    val lines = Source.fromFile(path).getLines()\n    val ratings = lines.map { line =>\n                             \n      val fields = line.split(\"::\")\n      Rating(fields(0).toInt, fields(1).toInt, fields(2).toDouble)\n    }.filter(_.rating > 0.0)\n  \n    if (ratings.isEmpty) {\n      sys.error(\"No ratings provided.\")\n    } else {\n      ratings.toSeq\n    }\n  }",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "loadRatings: (path: String)Seq[org.apache.spark.mllib.recommendation.Rating]\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 18
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Load my personal movie ratings\nval myRatings = loadRatings(\"data/personalRatings.txt\")\nval myRatingsRDD = sc.parallelize(myRatings, 1)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "myRatings: Seq[org.apache.spark.mllib.recommendation.Rating] = Stream(Rating(0,1,5.0), ?)\nmyRatingsRDD: org.apache.spark.rdd.RDD[org.apache.spark.mllib.recommendation.Rating] = ParallelCollectionRDD[18] at parallelize at <console>:61\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "ParallelCollectionRDD[18] at parallelize at &lt;console&gt;:61"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 19
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "myRatingsRDD.collect",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "res5: Array[org.apache.spark.mllib.recommendation.Rating] = Array(Rating(0,1,5.0), Rating(0,780,5.0), Rating(0,1210,4.0), Rating(0,648,4.0), Rating(0,165,5.0), Rating(0,153,4.0), Rating(0,1580,5.0), Rating(0,231,3.0))\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<div class=\"container-fluid\"><div><div class=\"col-md-12\"><div>\n      <script data-this=\"{&quot;dataId&quot;:&quot;anonb139cf356f6c11dc459719278f3f4dcd&quot;,&quot;dataInit&quot;:[{&quot;user&quot;:0,&quot;product&quot;:1,&quot;rating&quot;:5.0},{&quot;user&quot;:0,&quot;product&quot;:780,&quot;rating&quot;:5.0},{&quot;user&quot;:0,&quot;product&quot;:1210,&quot;rating&quot;:4.0},{&quot;user&quot;:0,&quot;product&quot;:648,&quot;rating&quot;:4.0},{&quot;user&quot;:0,&quot;product&quot;:165,&quot;rating&quot;:5.0},{&quot;user&quot;:0,&quot;product&quot;:153,&quot;rating&quot;:4.0},{&quot;user&quot;:0,&quot;product&quot;:1580,&quot;rating&quot;:5.0},{&quot;user&quot;:0,&quot;product&quot;:231,&quot;rating&quot;:3.0}],&quot;genId&quot;:&quot;473378650&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(['../javascripts/notebook/playground','../javascripts/notebook/magic/tableChart'], \n      function(playground, _magictableChart) {\n        // data ==> data-this (in observable.js's scopedEval) ==> this in JS => { dataId, dataInit, ... }\n        // this ==> scope (in observable.js's scopedEval) ==> this.parentElement ==> div.container below (toHtml)\n\n        playground.call(data,\n                        this\n                        ,\n                        {\n    \"f\": _magictableChart,\n    \"o\": {\"headers\":[\"user\",\"product\",\"rating\"],\"width\":600,\"height\":400}\n  }\n  \n                        \n                        \n                      );\n      }\n    );/*]]>*/</script>\n    <div>\n        <label for=\"input-anon2e9ff98f75bc57c8933b023eeed25146\">\n      Max Points\n    </label><input id=\"input-anon2e9ff98f75bc57c8933b023eeed25146\" type=\"number\" name=\"input-anon2e9ff98f75bc57c8933b023eeed25146\" data-bind=\"textInput: value, fireChange: true, valueUpdate: 'input'\">\n      <script data-selector=\"#input-anon2e9ff98f75bc57c8933b023eeed25146\" data-this=\"{&quot;valueId&quot;:&quot;anon2e9ff98f75bc57c8933b023eeed25146&quot;,&quot;valueInit&quot;:25}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(\n ['observable', 'knockout'],\n function (Observable, ko) {\n   //console.log(\"-----------\")\n   //console.dir(this);\n   //console.dir(valueId);\n   var obs = Observable.makeObservable(valueId)\n                       .extend({ rateLimit: { //throttle\n                                   timeout: 500,\n                                   method: \"notifyWhenChangesStop\"\n                                 }\n                               }\n                       );\n   ko.applyBindings({\n     value: obs\n   }, this);\n   obs(valueInit);\n }\n)/*]]>*/</script>\n    </input>\n        <p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anon70a737d0da10a199c6da4ca6eeb8368d&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p> <span style=\"color:red\"><p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anon8aece57ac7d70530b95c3f529007ddf1&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p></span>\n        <div>\n        </div>\n      </div></div></div></div></div>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 20
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Split data into train, validation and test\nval numPartitions = 4\nval training = ratings.filter(x => x._1 < 6)\n  .values\n  .union(myRatingsRDD)\n  .repartition(numPartitions)\n  .cache()\nval validation = ratings.filter(x => x._1 >= 6 && x._1 < 8)\n  .values\n  .repartition(numPartitions)\n  .cache()\nval test = ratings.filter(x => x._1 >= 8).values.cache()\n\nval numTraining = training.count()\nval numValidation = validation.count()\nval numTest = test.count()\n\nprintln(\"Training: \" + numTraining + \", validation: \" + numValidation + \", test: \" + numTest)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "Training: 602249, validation: 198919, test: 199049\nnumPartitions: Int = 4\ntraining: org.apache.spark.rdd.RDD[org.apache.spark.mllib.recommendation.Rating] = MapPartitionsRDD[25] at repartition at <console>:66\nvalidation: org.apache.spark.rdd.RDD[org.apache.spark.mllib.recommendation.Rating] = MapPartitionsRDD[31] at repartition at <console>:70\ntest: org.apache.spark.rdd.RDD[org.apache.spark.mllib.recommendation.Rating] = MapPartitionsRDD[33] at values at <console>:72\nnumTraining: Long = 602249\nnumValidation: Long = 198919\nnumTest: Long = 199049\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 21
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Calculate RMSE\ndef computeRmse(model: MatrixFactorizationModel, data: RDD[Rating], n: Long): Double = {\n  val predictions: RDD[Rating] = model.predict(data.map(x => (x.user, x.product)))\n  \n  val predictionsAndRatings = predictions.map(x => ((x.user, x.product), x.rating))\n    .join(data.map(x => ((x.user, x.product), x.rating)))\n    .values\n  math.sqrt(predictionsAndRatings.map(x => (x._1 - x._2) * (x._1 - x._2))\n                                 .reduce(_ + _) / n)\n}",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "computeRmse: (model: org.apache.spark.mllib.recommendation.MatrixFactorizationModel, data: org.apache.spark.rdd.RDD[org.apache.spark.mllib.recommendation.Rating], n: Long)Double\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 24
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// train model with grid search\nval ranks = List(8, 12)\nval lambdas = List(0.1, 10.0)\nval numIters = List(10, 20)\n\nvar bestModel: Option[MatrixFactorizationModel] = None\nvar bestValidationRmse = Double.MaxValue\nvar bestRank = 0\nvar bestLambda = -1.0\nvar bestNumIter = -1\n\nfor (rank <- ranks; lambda <- lambdas; numIter <- numIters) {\n  val model = ALS.train(training, rank, numIter, lambda)\n  val validationRmse = computeRmse(model, validation, numValidation)\n  println(\"RMSE (validation) = \" + validationRmse + \" for the model trained with rank = \" \n    + rank + \", lambda = \" + lambda + \", and numIter = \" + numIter + \".\")\n\n  if (validationRmse < bestValidationRmse) {\n    bestModel = Some(model)\n    bestValidationRmse = validationRmse\n    bestRank = rank\n    bestLambda = lambda\n    bestNumIter = numIter\n  }\n}",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "RMSE (validation) = 0.8766795362930466 for the model trained with rank = 8, lambda = 0.1, and numIter = 10.\nRMSE (validation) = 0.8722458422698913 for the model trained with rank = 8, lambda = 0.1, and numIter = 20.\nRMSE (validation) = 3.7558695311242833 for the model trained with rank = 8, lambda = 10.0, and numIter = 10.\nRMSE (validation) = 3.7558695311242833 for the model trained with rank = 8, lambda = 10.0, and numIter = 20.\nRMSE (validation) = 0.8795017353620666 for the model trained with rank = 12, lambda = 0.1, and numIter = 10.\nRMSE (validation) = 0.8709142383732396 for the model trained with rank = 12, lambda = 0.1, and numIter = 20.\nRMSE (validation) = 3.7558695311242833 for the model trained with rank = 12, lambda = 10.0, and numIter = 10.\nRMSE (validation) = 3.7558695311242833 for the model trained with rank = 12, lambda = 10.0, and numIter = 20.\nranks: List[Int] = List(8, 12)\nlambdas: List[Double] = List(0.1, 10.0)\nnumIters: List[Int] = List(10, 20)\nbestModel: Option[org.apache.spark.mllib.recommendation.MatrixFactorizationModel] = Some(org.apache.spark.mllib.recommendation.MatrixFactorizationModel@29f93d5c)\nbestValidationRmse: Double = 0.8709142383732396\nbestRank: Int = 12\nbestLambda: Double = 0.1\nbestNumIter: Int = 20\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 33
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// evaluate bestModel with Test set\nval testRmse = computeRmse(bestModel.get, test, numTest)\n\nprintln(\"The best model was trained with rank = \" + bestRank + \" and lambda = \" + bestLambda\n  + \", and numIter = \" + bestNumIter + \", and its RMSE on the test set is \" + testRmse + \".\")\n",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "The best model was trained with rank = 12 and lambda = 0.1, and numIter = 20, and its RMSE on the test set is 0.8691456675352056.\ntestRmse: Double = 0.8691456675352056\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 34
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Baseline model\nval meanRating = training.union(validation).map(_.rating).mean\nval baselineRmse = \n  math.sqrt(test.map(x => (meanRating - x.rating) * (meanRating - x.rating)).mean)\nval improvement = (baselineRmse - testRmse) / baselineRmse * 100\nprintln(\"The best model improves the baseline by \" + \"%1.2f\".format(improvement) + \"%.\")",
+    "outputs" : [ ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Movie recommendations for me\nval myRatedMovieIds = myRatings.map(_.product).toSet\nval candidates = sc.parallelize(movies.keys.filter(!myRatedMovieIds.contains(_)).toSeq)\nval recommendations = bestModel.get\n  .predict(candidates.map((0, _)))\n  .collect()\n  .sortBy(- _.rating)\n  .take(50)\n\nvar i = 1\nprintln(\"Movies recommended for you:\")\nrecommendations.foreach { r =>\n  println(\"%2d\".format(i) + \": \" + movies(r.product))\n  i += 1\n}",
+    "outputs" : [ ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : true
+    },
+    "cell_type" : "code",
+    "source" : "",
+    "outputs" : [ ]
+  } ],
+  "nbformat" : 4
+}
