@@ -1,0 +1,329 @@
+{
+  "metadata" : {
+    "name" : "Lab 5.3",
+    "user_save_timestamp" : "1969-12-31T16:00:00.000Z",
+    "auto_save_timestamp" : "1969-12-31T16:00:00.000Z",
+    "language_info" : {
+      "name" : "scala",
+      "file_extension" : "scala",
+      "codemirror_mode" : "text/x-scala"
+    },
+    "trusted" : true,
+    "customLocalRepo" : null,
+    "customRepos" : null,
+    "customDeps" : null,
+    "customImports" : null,
+    "customArgs" : null,
+    "customSparkConf" : null
+  },
+  "cells" : [ {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : ":dp org.apache.kafka % kafka_2.10 % 0.9.0.0\n+ org.apache.spark % spark-streaming-kafka_2.10 % 1.6.0",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "warning: there were four feature warnings; re-run with -feature for details\nglobalScope.jars: Array[String] = [Ljava.lang.String;@32d9e71a\nres2: List[String] = List(/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/com/101tec/zkclient/0.7/zkclient-0.7.jar, /var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/javax/activation/activation/1.1/activation-1.1.jar, /var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/com/yammer/metrics/metrics-core/2.2.0/metrics-core-2.2.0.jar, /var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/apache/kafka/kafka-clients/0.9.0.0/kafka-clients-0.9.0.0.jar, /var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark..."
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<div class=\"container-fluid\"><div><div class=\"col-md-12\"><div>\n      <script data-this=\"{&quot;dataId&quot;:&quot;anon7e1384bff3239008ec5b4d7ce2f3428f&quot;,&quot;dataInit&quot;:[{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/com/101tec/zkclient/0.7/zkclient-0.7.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/javax/activation/activation/1.1/activation-1.1.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/com/yammer/metrics/metrics-core/2.2.0/metrics-core-2.2.0.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/apache/kafka/kafka-clients/0.9.0.0/kafka-clients-0.9.0.0.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/net/jpountz/lz4/lz4/1.2.0/lz4-1.2.0.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/apache/zookeeper/zookeeper/3.4.6/zookeeper-3.4.6.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/jline/jline/0.9.94/jline-0.9.94.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/slf4j/slf4j-log4j12/1.7.6/slf4j-log4j12-1.7.6.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/net/sf/jopt-simple/jopt-simple/3.2/jopt-simple-3.2.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/log4j/log4j/1.2.15/log4j-1.2.15.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/xerial/snappy/snappy-java/1.1.1.7/snappy-java-1.1.1.7.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/io/netty/netty/3.7.0.Final/netty-3.7.0.Final.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/junit/junit/3.8.1/junit-3.8.1.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/scala-lang/scala-library/2.10.5/scala-library-2.10.5.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/javax/mail/mail/1.4/mail-1.4.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/apache/kafka/kafka_2.10/0.9.0.0/kafka_2.10-0.9.0.0.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/net/jpountz/lz4/lz4/1.3.0/lz4-1.3.0.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/slf4j/slf4j-api/1.7.10/slf4j-api-1.7.10.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/com/101tec/zkclient/0.3/zkclient-0.3.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/spark-project/spark/unused/1.0.0/unused-1.0.0.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/apache/spark/spark-streaming-kafka_2.10/1.6.0/spark-streaming-kafka_2.10-1.6.0.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/xerial/snappy/snappy-java/1.1.2/snappy-java-1.1.2.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/apache/kafka/kafka-clients/0.8.2.1/kafka-clients-0.8.2.1.jar&quot;},{&quot;string value&quot;:&quot;/var/folders/sx/jfhr7y5n0mn5f5894yptc3vh0000gn/T/spark-notebook/aether/243dd3b3-77c3-47d9-8ef3-df10fe1c5ac9/org/apache/kafka/kafka_2.10/0.8.2.1/kafka_2.10-0.8.2.1.jar&quot;}],&quot;genId&quot;:&quot;1954003197&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(['../javascripts/notebook/playground','../javascripts/notebook/magic/tableChart'], \n      function(playground, _magictableChart) {\n        // data ==> data-this (in observable.js's scopedEval) ==> this in JS => { dataId, dataInit, ... }\n        // this ==> scope (in observable.js's scopedEval) ==> this.parentElement ==> div.container below (toHtml)\n\n        playground.call(data,\n                        this\n                        ,\n                        {\n    \"f\": _magictableChart,\n    \"o\": {\"headers\":[\"string value\"],\"width\":600,\"height\":400}\n  }\n  \n                        \n                        \n                      );\n      }\n    );/*]]>*/</script>\n    <div>\n        <label for=\"input-anon0585995bd8a36ba8b472532e3286a314\">\n      Max Points\n    </label><input id=\"input-anon0585995bd8a36ba8b472532e3286a314\" type=\"number\" name=\"input-anon0585995bd8a36ba8b472532e3286a314\" data-bind=\"textInput: value, fireChange: true, valueUpdate: 'input'\">\n      <script data-selector=\"#input-anon0585995bd8a36ba8b472532e3286a314\" data-this=\"{&quot;valueId&quot;:&quot;anon0585995bd8a36ba8b472532e3286a314&quot;,&quot;valueInit&quot;:25}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(\n ['observable', 'knockout'],\n function (Observable, ko) {\n   //console.log(\"-----------\")\n   //console.dir(this);\n   //console.dir(valueId);\n   var obs = Observable.makeObservable(valueId)\n                       .extend({ rateLimit: { //throttle\n                                   timeout: 500,\n                                   method: \"notifyWhenChangesStop\"\n                                 }\n                               }\n                       );\n   ko.applyBindings({\n     value: obs\n   }, this);\n   obs(valueInit);\n }\n)/*]]>*/</script>\n    </input>\n        <p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anond71ed4f1b62fd73bf913c6d0d85f68f1&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p> <span style=\"color:red\"><p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anon8202ec6cac7b328eee5ab4298592e353&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p></span>\n        <div>\n        </div>\n      </div></div></div></div></div>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 1
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "import java.nio.ByteBuffer\nimport scala.util.Random\n\nimport org.apache.spark._\nimport org.apache.spark.sql._\nimport org.apache.spark.storage._\nimport org.apache.spark.streaming.{StreamingContext, Seconds, Minutes, Time}\nimport org.apache.spark.streaming.dstream._\nimport org.apache.spark.streaming.kafka._\nimport kafka.serializer.StringDecoder",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "import java.nio.ByteBuffer\nimport scala.util.Random\nimport org.apache.spark._\nimport org.apache.spark.sql._\nimport org.apache.spark.storage._\nimport org.apache.spark.streaming.{StreamingContext, Seconds, Minutes, Time}\nimport org.apache.spark.streaming.dstream._\nimport org.apache.spark.streaming.kafka._\nimport kafka.serializer.StringDecoder\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 2
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "//Configurations for Kafka\nval kafkaTopics = \"Word-Topic\"\nval kafkaBrokers = \"localhost:9092\" \n\n//data to produce\nval recordsPerSecond = 100\nval wordsPerRecord = 10\nval numSecondsToSend = 10\n// Putting records onto Kafka topic Word-Topic at a rate of 100 records per second with 10 words per record for 10 seconds",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "kafkaTopics: String = Word-Topic\nkafkaBrokers: String = localhost:9092\nrecordsPerSecond: Int = 100\nwordsPerRecord: Int = 10\nnumSecondsToSend: Int = 10\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "10"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 3
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "import java.util.HashMap\nimport scala.util.Random\nimport org.apache.kafka.clients.producer.{ProducerConfig, KafkaProducer, ProducerRecord}",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "import java.util.HashMap\nimport scala.util.Random\nimport org.apache.kafka.clients.producer.{ProducerConfig, KafkaProducer, ProducerRecord}\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 21
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Configure producer\nval props = new HashMap[String, Object]()\nprops.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBrokers)\nprops.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,\n  \"org.apache.kafka.common.serialization.StringSerializer\")\nprops.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,\n  \"org.apache.kafka.common.serialization.StringSerializer\")",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "props: java.util.HashMap[String,Object] = {value.serializer=org.apache.kafka.common.serialization.StringSerializer, bootstrap.servers=localhost:9092, key.serializer=org.apache.kafka.common.serialization.StringSerializer}\nres12: Object = null\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 22
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Random Words\nval randomWords = List(\"Hello\", \"I\", \"am\", \"Marvin\", \"Bye\")\nval totals = scala.collection.mutable.Map[String, Int]()\n",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "randomWords: List[String] = List(Hello, I, am, Marvin, Bye)\ntotals: scala.collection.mutable.Map[String,Int] = Map()\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "Map()"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 23
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Function to generate data\ndef generateData() = (1 to wordsPerRecord).map { x =>\n  val randomWord = randomWords(Random.nextInt(randomWords.size))\n  totals(randomWord) = totals.getOrElse(randomWord, 0) + 1\n  randomWord\n}.mkString(\" \")",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "generateData: ()String\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "Marvin Marvin I Bye Marvin Marvin Marvin Hello Bye Marvin"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 24
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val producer = new KafkaProducer[String, String](props)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "producer: org.apache.kafka.clients.producer.KafkaProducer[String,String] = org.apache.kafka.clients.producer.KafkaProducer@60d15acc\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "org.apache.kafka.clients.producer.KafkaProducer@60d15acc"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 25
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Generate and send the data\nfor (round <- 1 to numSecondsToSend) {\n  for (recordNum <- 1 to recordsPerSecond) {\n    val data = generateData()\n    val message = new ProducerRecord[String, String](kafkaTopics, null, data)\n    //producer.send(message)\n  }\n  Thread.sleep(1000) // Sleep for a second\n  println(s\"Sent $recordsPerSecond records with $wordsPerRecord words each\")\n}\n",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "Sent 100 records with 10 words each\nSent 100 records with 10 words each\nSent 100 records with 10 words each\nSent 100 records with 10 words each\nSent 100 records with 10 words each\nSent 100 records with 10 words each\nSent 100 records with 10 words each\nSent 100 records with 10 words each\nSent 100 records with 10 words each\nSent 100 records with 10 words each\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 26
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "println(\"\\nTotal number of records sent\")\ntotals.toSeq.sortBy(_._2).mkString(\"\\n\")",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "\nTotal number of records sent\nres14: String =\n(Hello,1968)\n(I,1975)\n(Marvin,2009)\n(am,2029)\n(Bye,2029)\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "(Hello,1968)\n(I,1975)\n(Marvin,2009)\n(am,2029)\n(Bye,2029)"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 27
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "//val kafkaTopics = \"TOPIC-1,TOPIC-2\"    // command separated list of topics\n//val kafkaBrokers = \"HOST1:9092,HOST2:9999\"   // comma separated list of broker:host\n\ndef createKafkaStream(ssc: StreamingContext): DStream[(String, String)] = {\n  val topicsSet = kafkaTopics.split(\",\").toSet\n  val kafkaParams = Map[String, String](\"metadata.broker.list\" -> kafkaBrokers)\n  KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](\n                                   ssc, kafkaParams, topicsSet)\n}",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "createKafkaStream: (ssc: org.apache.spark.streaming.StreamingContext)org.apache.spark.streaming.dstream.DStream[(String, String)]\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 4
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val batchIntervalSeconds = 2\nval checkpointDir = \"data/checkpoint\"",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "batchIntervalSeconds: Int = 2\ncheckpointDir: String = data/checkpoint\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "data/checkpoint"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 5
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Function to create a new StreamingContext and set it up\ndef creatingFunc(): StreamingContext = {\n    \n  // Create a StreamingContext\n  val ssc = new StreamingContext(sc, Seconds(batchIntervalSeconds))\n\n  // Get the word stream from the source\n  val wordStream = createKafkaStream(ssc).flatMap { event => event._2.split(\" \") }\n  \n  // Create a stream to do a running count of the words\n  val updateFunc = (values: Seq[Int], state: Option[Int]) => {\n    val currentCount = values.sum\n    val previousCount = state.getOrElse(0)\n    Some(currentCount + previousCount)\n  }\n  \n  val runningCountStream = wordStream.map { x => (x, 1) }.updateStateByKey(updateFunc)\n  \n  // Create temp table at every batch interval\n  runningCountStream.foreachRDD { rdd => \n    val sqlContext = SQLContext.getOrCreate(SparkContext.getOrCreate())\n    sqlContext.createDataFrame(rdd).toDF(\"word\", \"count\").registerTempTable(\"batch_word_count\")  \n    rdd.take(1)\n  }\n  \n  // To make sure data is not deleted by the time we query it interactively\n  ssc.remember(Minutes(1))\n  \n  ssc.checkpoint(checkpointDir)\n  \n  println(\"Creating function called to create new StreamingContext\")\n  ssc\n}",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "creatingFunc: ()org.apache.spark.streaming.StreamingContext\n"
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Stop any existing StreamingContext \nval stopActiveContext = true\nif (stopActiveContext) {\n  StreamingContext.getActive.foreach { _.stop(stopSparkContext = false) }\n} ",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "stopActiveContext: Boolean = true\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 7
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "// Get or create a streaming context.\nval ssc = StreamingContext.getActiveOrCreate(creatingFunc)\n\n// This starts the streaming context in the background. \nssc.start()",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "org.apache.spark.SparkException: java.nio.channels.ClosedChannelException\n  at org.apache.spark.streaming.kafka.KafkaCluster$$anonfun$checkErrors$1.apply(KafkaCluster.scala:366)\n  at org.apache.spark.streaming.kafka.KafkaCluster$$anonfun$checkErrors$1.apply(KafkaCluster.scala:366)\n  at scala.util.Either.fold(Either.scala:98)\n  at org.apache.spark.streaming.kafka.KafkaCluster$.checkErrors(KafkaCluster.scala:365)\n  at org.apache.spark.streaming.kafka.KafkaUtils$.getFromOffsets(KafkaUtils.scala:222)\n  at org.apache.spark.streaming.kafka.KafkaUtils$.createDirectStream(KafkaUtils.scala:484)\n  at .createKafkaStream(<console>:72)\n  at .creatingFunc(<console>:76)\n  at $anonfun$1.apply(<console>:71)\n  at $anonfun$1.apply(<console>:71)\n  at scala.Option.getOrElse(Option.scala:121)\n  at org.apache.spark.streaming.StreamingContext$.getActiveOrCreate(StreamingContext.scala:810)\n  ... 33 elided\n"
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "ssc.awaitTerminationOrTimeout(batchIntervalSeconds * 5 * 1000)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "<console>:67: error: not found: value ssc\n       ssc.awaitTerminationOrTimeout(batchIntervalSeconds * 5 * 1000)\n       ^\n"
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : true
+    },
+    "cell_type" : "code",
+    "source" : "",
+    "outputs" : [ ]
+  } ],
+  "nbformat" : 4
+}
