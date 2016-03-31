@@ -1,0 +1,259 @@
+{
+  "metadata" : {
+    "name" : "Lab4.4",
+    "user_save_timestamp" : "1969-12-31T16:00:00.000Z",
+    "auto_save_timestamp" : "1969-12-31T16:00:00.000Z",
+    "language_info" : {
+      "name" : "scala",
+      "file_extension" : "scala",
+      "codemirror_mode" : "text/x-scala"
+    },
+    "trusted" : true,
+    "customLocalRepo" : null,
+    "customRepos" : null,
+    "customDeps" : null,
+    "customImports" : null,
+    "customArgs" : null,
+    "customSparkConf" : null
+  },
+  "cells" : [ {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "//val sc: SparkContext // An existing SparkContext.\nimport org.apache.spark.sql.hive._\nval sqlContext = new HiveContext(sc)\nimport sqlContext.implicits._",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "import org.apache.spark.sql.hive._\nsqlContext: org.apache.spark.sql.hive.HiveContext = org.apache.spark.sql.hive.HiveContext@6d626d9f\nimport sqlContext.implicits._\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "org.apache.spark.sql.SQLContext$implicits$@1f3dfcc6"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 11
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val yelp = sqlContext.read.json(\"data/yelp_academic_dataset_business.json\")",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "yelp: org.apache.spark.sql.DataFrame = [attributes: struct<Accepts Credit Cards:string,Accepts Insurance:boolean,Ages Allowed:string,Alcohol:string,Ambience:struct<casual:boolean,classy:boolean,divey:boolean,hipster:boolean,intimate:boolean,romantic:boolean,touristy:boolean,trendy:boolean,upscale:boolean>,Attire:string,BYOB:boolean,BYOB/Corkage:string,By Appointment Only:boolean,Caters:boolean,Coat Check:boolean,Corkage:boolean,Delivery:boolean,Dietary Restrictions:struct<dairy-free:boolean,gluten-free:boolean,halal:boolean,kosher:boolean,soy-free:boolean,vegan:boolean,vegetarian:boolean>,Dogs Allowed:boolean,Drive-Thru:boolean,Good For:struct<breakfast:boolean,brunch:boolean,dessert:boolean,dinner:boolean,latenight:boolean,lunch:boolean>,Good For Dancing:boolean,Good For Groups:boolean..."
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<span style=\"color:red;\">Ooops, exception in the cell: </span>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 12
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "yelp.printSchema()",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "root\n |-- attributes: struct (nullable = true)\n |    |-- Accepts Credit Cards: string (nullable = true)\n |    |-- Accepts Insurance: boolean (nullable = true)\n |    |-- Ages Allowed: string (nullable = true)\n |    |-- Alcohol: string (nullable = true)\n |    |-- Ambience: struct (nullable = true)\n |    |    |-- casual: boolean (nullable = true)\n |    |    |-- classy: boolean (nullable = true)\n |    |    |-- divey: boolean (nullable = true)\n |    |    |-- hipster: boolean (nullable = true)\n |    |    |-- intimate: boolean (nullable = true)\n |    |    |-- romantic: boolean (nullable = true)\n |    |    |-- touristy: boolean (nullable = true)\n |    |    |-- trendy: boolean (nullable = true)\n |    |    |-- upscale: boolean (nullable = true)\n |    |-- Attire: string (nullable = true)\n |    |-- BYOB: boolean (nullable = true)\n |    |-- BYOB/Corkage: string (nullable = true)\n |    |-- By Appointment Only: boolean (nullable = true)\n |    |-- Caters: boolean (nullable = true)\n |    |-- Coat Check: boolean (nullable = true)\n |    |-- Corkage: boolean (nullable = true)\n |    |-- Delivery: boolean (nullable = true)\n |    |-- Dietary Restrictions: struct (nullable = true)\n |    |    |-- dairy-free: boolean (nullable = true)\n |    |    |-- gluten-free: boolean (nullable = true)\n |    |    |-- halal: boolean (nullable = true)\n |    |    |-- kosher: boolean (nullable = true)\n |    |    |-- soy-free: boolean (nullable = true)\n |    |    |-- vegan: boolean (nullable = true)\n |    |    |-- vegetarian: boolean (nullable = true)\n |    |-- Dogs Allowed: boolean (nullable = true)\n |    |-- Drive-Thru: boolean (nullable = true)\n |    |-- Good For: struct (nullable = true)\n |    |    |-- breakfast: boolean (nullable = true)\n |    |    |-- brunch: boolean (nullable = true)\n |    |    |-- dessert: boolean (nullable = true)\n |    |    |-- dinner: boolean (nullable = true)\n |    |    |-- latenight: boolean (nullable = true)\n |    |    |-- lunch: boolean (nullable = true)\n |    |-- Good For Dancing: boolean (nullable = true)\n |    |-- Good For Groups: boolean (nullable = true)\n |    |-- Good For Kids: boolean (nullable = true)\n |    |-- Good for Kids: boolean (nullable = true)\n |    |-- Hair Types Specialized In: struct (nullable = true)\n |    |    |-- africanamerican: boolean (nullable = true)\n |    |    |-- asian: boolean (nullable = true)\n |    |    |-- coloring: boolean (nullable = true)\n |    |    |-- curly: boolean (nullable = true)\n |    |    |-- extensions: boolean (nullable = true)\n |    |    |-- kids: boolean (nullable = true)\n |    |    |-- perms: boolean (nullable = true)\n |    |    |-- straightperms: boolean (nullable = true)\n |    |-- Happy Hour: boolean (nullable = true)\n |    |-- Has TV: boolean (nullable = true)\n |    |-- Music: struct (nullable = true)\n |    |    |-- background_music: boolean (nullable = true)\n |    |    |-- dj: boolean (nullable = true)\n |    |    |-- jukebox: boolean (nullable = true)\n |    |    |-- karaoke: boolean (nullable = true)\n |    |    |-- live: boolean (nullable = true)\n |    |    |-- playlist: boolean (nullable = true)\n |    |    |-- video: boolean (nullable = true)\n |    |-- Noise Level: string (nullable = true)\n |    |-- Open 24 Hours: boolean (nullable = true)\n |    |-- Order at Counter: boolean (nullable = true)\n |    |-- Outdoor Seating: boolean (nullable = true)\n |    |-- Parking: struct (nullable = true)\n |    |    |-- garage: boolean (nullable = true)\n |    |    |-- lot: boolean (nullable = true)\n |    |    |-- street: boolean (nullable = true)\n |    |    |-- valet: boolean (nullable = true)\n |    |    |-- validated: boolean (nullable = true)\n |    |-- Payment Types: struct (nullable = true)\n |    |    |-- amex: boolean (nullable = true)\n |    |    |-- cash_only: boolean (nullable = true)\n |    |    |-- discover: boolean (nullable = true)\n |    |    |-- mastercard: boolean (nullable = true)\n |    |    |-- visa: boolean (nullable = true)\n |    |-- Price Range: long (nullable = true)\n |    |-- Smoking: string (nullable = true)\n |    |-- Take-out: boolean (nullable = true)\n |    |-- Takes Reservations: boolean (nullable = true)\n |    |-- Waiter Service: boolean (nullable = true)\n |    |-- Wheelchair Accessible: boolean (nullable = true)\n |    |-- Wi-Fi: string (nullable = true)\n |-- business_id: string (nullable = true)\n |-- categories: array (nullable = true)\n |    |-- element: string (containsNull = true)\n |-- city: string (nullable = true)\n |-- full_address: string (nullable = true)\n |-- hours: struct (nullable = true)\n |    |-- Friday: struct (nullable = true)\n |    |    |-- close: string (nullable = true)\n |    |    |-- open: string (nullable = true)\n |    |-- Monday: struct (nullable = true)\n |    |    |-- close: string (nullable = true)\n |    |    |-- open: string (nullable = true)\n |    |-- Saturday: struct (nullable = true)\n |    |    |-- close: string (nullable = true)\n |    |    |-- open: string (nullable = true)\n |    |-- Sunday: struct (nullable = true)\n |    |    |-- close: string (nullable = true)\n |    |    |-- open: string (nullable = true)\n |    |-- Thursday: struct (nullable = true)\n |    |    |-- close: string (nullable = true)\n |    |    |-- open: string (nullable = true)\n |    |-- Tuesday: struct (nullable = true)\n |    |    |-- close: string (nullable = true)\n |    |    |-- open: string (nullable = true)\n |    |-- Wednesday: struct (nullable = true)\n |    |    |-- close: string (nullable = true)\n |    |    |-- open: string (nullable = true)\n |-- latitude: double (nullable = true)\n |-- longitude: double (nullable = true)\n |-- name: string (nullable = true)\n |-- neighborhoods: array (nullable = true)\n |    |-- element: string (containsNull = true)\n |-- open: boolean (nullable = true)\n |-- review_count: long (nullable = true)\n |-- stars: double (nullable = true)\n |-- state: string (nullable = true)\n |-- type: string (nullable = true)\n\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 13
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "yelp.registerTempTable(\"yelp\")",
+    "outputs" : [ {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 14
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "sqlContext.sql(\"\"\"SELECT name from yelp\nlateral view explode(categories) restaurant_table as restaurant\nwhere attributes.`Accepts Credit Cards` = 'true'\nAND STARS = 5 AND CITY = 'Phoenix' AND restaurant = 'Restaurants' limit 10\"\"\")",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "res5: org.apache.spark.sql.DataFrame = [name: string]\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<span style=\"color:red;\">Ooops, exception in the cell: </span>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 15
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "widgets.BarChart(yelp, Some((\"name\", \"stars\")), maxPoints=40)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "res6: notebook.front.widgets.BarChart[org.apache.spark.sql.DataFrame] = <BarChart widget>\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<div>\n      <script data-this=\"{&quot;dataId&quot;:&quot;anona1cd430334ca93d10d86bcb8ff716c59&quot;,&quot;dataInit&quot;:[{&quot;name&quot;:&quot;Eric Goldberg, MD&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Clancy's Pub&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Cool Springs Golf Center&quot;,&quot;stars&quot;:2.5},{&quot;name&quot;:&quot;Verizon Wireless&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Emil's Lounge&quot;,&quot;stars&quot;:4.5},{&quot;name&quot;:&quot;Alexion's Bar &amp; Grill&quot;,&quot;stars&quot;:4.0},{&quot;name&quot;:&quot;Flynn's E W Tire Service Center&quot;,&quot;stars&quot;:1.5},{&quot;name&quot;:&quot;Forsythe Miniature Golf &amp; Snacks&quot;,&quot;stars&quot;:4.0},{&quot;name&quot;:&quot;Quaker State Construction&quot;,&quot;stars&quot;:2.5},{&quot;name&quot;:&quot;Kings Family Restaurant&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Shop N'save&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Rocky's Lounge&quot;,&quot;stars&quot;:4.0},{&quot;name&quot;:&quot;Gab &amp; Eat&quot;,&quot;stars&quot;:4.5},{&quot;name&quot;:&quot;Barb's Country Junction Cafe&quot;,&quot;stars&quot;:4.0},{&quot;name&quot;:&quot;Extended Stay America - Pittsburgh - Carnegie&quot;,&quot;stars&quot;:4.0},{&quot;name&quot;:&quot;Paddy's Pour House&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Porto Fino Pizzaria &amp; Gyro&quot;,&quot;stars&quot;:2.5},{&quot;name&quot;:&quot;Alteration World&quot;,&quot;stars&quot;:5.0},{&quot;name&quot;:&quot;Long John Silver's&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Weinberg Lisa, DMD&quot;,&quot;stars&quot;:2.0},{&quot;name&quot;:&quot;Don Don Chinese Restaurant&quot;,&quot;stars&quot;:2.5},{&quot;name&quot;:&quot;Denny's&quot;,&quot;stars&quot;:4.0},{&quot;name&quot;:&quot;Amerifit&quot;,&quot;stars&quot;:2.5},{&quot;name&quot;:&quot;Papa J's&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Emmert Dental Associates&quot;,&quot;stars&quot;:1.0},{&quot;name&quot;:&quot;McDonald's&quot;,&quot;stars&quot;:2.0},{&quot;name&quot;:&quot;Eat'n Park Hospitality Group&quot;,&quot;stars&quot;:2.5},{&quot;name&quot;:&quot;Starbucks&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Michaels&quot;,&quot;stars&quot;:3.0},{&quot;name&quot;:&quot;Steak 'n Shake&quot;,&quot;stars&quot;:2.0},{&quot;name&quot;:&quot;Filene's Basement&quot;,&quot;stars&quot;:4.0},{&quot;name&quot;:&quot;Sing Sing&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Joe Dilorio's Auto Body Shop&quot;,&quot;stars&quot;:4.5},{&quot;name&quot;:&quot;Lowe's&quot;,&quot;stars&quot;:2.5},{&quot;name&quot;:&quot;Duke's Upper Deck Cafe&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Dave &amp; Buster's&quot;,&quot;stars&quot;:3.0},{&quot;name&quot;:&quot;Rock Bottom&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Improv Comedy Club&quot;,&quot;stars&quot;:3.0},{&quot;name&quot;:&quot;Giant Eagle&quot;,&quot;stars&quot;:3.5},{&quot;name&quot;:&quot;Barnes &amp; Noble Booksellers&quot;,&quot;stars&quot;:3.5}],&quot;genId&quot;:&quot;1340665178&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(['../javascripts/notebook/playground','../javascripts/notebook/magic/barChart'], \n      function(playground, _magicbarChart) {\n        // data ==> data-this (in observable.js's scopedEval) ==> this in JS => { dataId, dataInit, ... }\n        // this ==> scope (in observable.js's scopedEval) ==> this.parentElement ==> div.container below (toHtml)\n\n        playground.call(data,\n                        this\n                        ,\n                        {\n    \"f\": _magicbarChart,\n    \"o\": {\"x\":\"name\",\"y\":\"stars\",\"width\":600,\"height\":400}\n  }\n  \n                        \n                        \n                      );\n      }\n    );/*]]>*/</script>\n    <div>\n        <label for=\"input-anon7eb8ec7ed60ca921eb9bc1e29366756e\">\n      Max Points\n    </label><input id=\"input-anon7eb8ec7ed60ca921eb9bc1e29366756e\" type=\"number\" name=\"input-anon7eb8ec7ed60ca921eb9bc1e29366756e\" data-bind=\"textInput: value, fireChange: true, valueUpdate: 'input'\">\n      <script data-selector=\"#input-anon7eb8ec7ed60ca921eb9bc1e29366756e\" data-this=\"{&quot;valueId&quot;:&quot;anon7eb8ec7ed60ca921eb9bc1e29366756e&quot;,&quot;valueInit&quot;:40}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(\n ['observable', 'knockout'],\n function (Observable, ko) {\n   //console.log(\"-----------\")\n   //console.dir(this);\n   //console.dir(valueId);\n   var obs = Observable.makeObservable(valueId)\n                       .extend({ rateLimit: { //throttle\n                                   timeout: 500,\n                                   method: \"notifyWhenChangesStop\"\n                                 }\n                               }\n                       );\n   ko.applyBindings({\n     value: obs\n   }, this);\n   obs(valueInit);\n }\n)/*]]>*/</script>\n    </input>\n        <p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anon95200df4eecd08bdf892549618451b95&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p> <span style=\"color:red\"><p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anon735a572e61ab1dc0ab1018ca516bcc6a&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p></span>\n        <div>\n        </div>\n      </div></div>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 16
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "/*\nRated at 5 stars\nIn the city of Phoenix\nAccepts credit card (Reference the Accept Credit Card field by attributes.`Accepts Credit Cards`\nAnd is under the Restaurants category\n*/",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "import notebook.front.widgets.Sql\nimport notebook.front.widgets.Sql._\nall: notebook.front.widgets.Sql = <Sql widget>\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anonb01ab44be6c517066352d6407d67db13&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p><p data-bind=\"text: value\">\n      <script data-this=\"{&quot;valueId&quot;:&quot;anon81d6238af058afc1efc95c417bd816c2&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/ req(\n              ['observable', 'knockout'],\n              function (O, ko) {\n                ko.applyBindings({\n                    value: O.makeObservable(valueId)\n                  },\n                  this\n                );\n              }\n            );\n        /*]]>*/</script>\n    </p>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 13
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "val users = sc.textFile(\"data/users.txt\")\nval trans = sc.textFile(\"data/transactions.txt\")",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "users: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[22] at textFile at <console>:52\ntrans: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[24] at textFile at <console>:53\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "MapPartitionsRDD[24] at textFile at &lt;console&gt;:53"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 17
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "users.take(10)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "res7: Array[String] = Array(1106214172;Prometheus Barwis;prometheus.barwis@me.com;(533) 072-2779, 527133132;Ashraf Bainbridge;ashraf.bainbridge@gmail.com;, 1290614884;Alain Hennesey;alain.hennesey@facebook.com,alain.hennesey@me.com;(942) 208-8460,(801) 938-2376, 1700818057;Hamed Fingerhuth;hamed.fingerhuth@msn.com,hamed.fingerhuth@me.com;, 17378782;Annamae Leyte;annamae.leyte@msn.com,annamae.leyte@facebook.com;, 1723254379;Chao Peachy;chao.peachy@me.com,chao.peachy@gmail.com;(510) 121-0098, 1946358537;Somtochukwu Mouritsen;somtochukwu.mouritsen@me.com;(669) 504-8080, 33663453;Elisabeth Berry;elisabeth.berry@facebook.com;(802) 973-8267, 1329323232;Jalan Blakely;jalan.blakely@gmail.com;, 68524725;Lyric Boddy;lyric.boddy@yahoo.com;(273) 077-4039)\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<div class=\"container-fluid\"><div><div class=\"col-md-12\"><div>\n      <script data-this=\"{&quot;dataId&quot;:&quot;anon7b0d8a2e0d4fa4c0b5ce111d1c1a98f9&quot;,&quot;dataInit&quot;:[{&quot;string value&quot;:&quot;1106214172;Prometheus Barwis;prometheus.barwis@me.com;(533) 072-2779&quot;},{&quot;string value&quot;:&quot;527133132;Ashraf Bainbridge;ashraf.bainbridge@gmail.com;&quot;},{&quot;string value&quot;:&quot;1290614884;Alain Hennesey;alain.hennesey@facebook.com,alain.hennesey@me.com;(942) 208-8460,(801) 938-2376&quot;},{&quot;string value&quot;:&quot;1700818057;Hamed Fingerhuth;hamed.fingerhuth@msn.com,hamed.fingerhuth@me.com;&quot;},{&quot;string value&quot;:&quot;17378782;Annamae Leyte;annamae.leyte@msn.com,annamae.leyte@facebook.com;&quot;},{&quot;string value&quot;:&quot;1723254379;Chao Peachy;chao.peachy@me.com,chao.peachy@gmail.com;(510) 121-0098&quot;},{&quot;string value&quot;:&quot;1946358537;Somtochukwu Mouritsen;somtochukwu.mouritsen@me.com;(669) 504-8080&quot;},{&quot;string value&quot;:&quot;33663453;Elisabeth Berry;elisabeth.berry@facebook.com;(802) 973-8267&quot;},{&quot;string value&quot;:&quot;1329323232;Jalan Blakely;jalan.blakely@gmail.com;&quot;},{&quot;string value&quot;:&quot;68524725;Lyric Boddy;lyric.boddy@yahoo.com;(273) 077-4039&quot;}],&quot;genId&quot;:&quot;246636901&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(['../javascripts/notebook/playground','../javascripts/notebook/magic/tableChart'], \n      function(playground, _magictableChart) {\n        // data ==> data-this (in observable.js's scopedEval) ==> this in JS => { dataId, dataInit, ... }\n        // this ==> scope (in observable.js's scopedEval) ==> this.parentElement ==> div.container below (toHtml)\n\n        playground.call(data,\n                        this\n                        ,\n                        {\n    \"f\": _magictableChart,\n    \"o\": {\"headers\":[\"string value\"],\"width\":600,\"height\":400}\n  }\n  \n                        \n                        \n                      );\n      }\n    );/*]]>*/</script>\n    <div>\n        <label for=\"input-anon494349339fb1f583a56b1659a229fa22\">\n      Max Points\n    </label><input id=\"input-anon494349339fb1f583a56b1659a229fa22\" type=\"number\" name=\"input-anon494349339fb1f583a56b1659a229fa22\" data-bind=\"textInput: value, fireChange: true, valueUpdate: 'input'\">\n      <script data-selector=\"#input-anon494349339fb1f583a56b1659a229fa22\" data-this=\"{&quot;valueId&quot;:&quot;anon494349339fb1f583a56b1659a229fa22&quot;,&quot;valueInit&quot;:25}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(\n ['observable', 'knockout'],\n function (Observable, ko) {\n   //console.log(\"-----------\")\n   //console.dir(this);\n   //console.dir(valueId);\n   var obs = Observable.makeObservable(valueId)\n                       .extend({ rateLimit: { //throttle\n                                   timeout: 500,\n                                   method: \"notifyWhenChangesStop\"\n                                 }\n                               }\n                       );\n   ko.applyBindings({\n     value: obs\n   }, this);\n   obs(valueInit);\n }\n)/*]]>*/</script>\n    </input>\n        <p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anone8a6257242164b7f3fc3b197fdbb2a6d&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p> <span style=\"color:red\"><p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anon88c2ade4f8bf634b7dc8a2b61c937223&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p></span>\n        <div>\n        </div>\n      </div></div></div></div></div>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 18
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "trans.take(3)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "res8: Array[String] = Array(815581247;$144.82;2015-09-05, 1534673027;$140.93;2014-03-11, 842468364;$104.26;2014-05-06)\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : "<div class=\"container-fluid\"><div><div class=\"col-md-12\"><div>\n      <script data-this=\"{&quot;dataId&quot;:&quot;anon13213c51ef3db741f7d9a7ab066000c6&quot;,&quot;dataInit&quot;:[{&quot;string value&quot;:&quot;815581247;$144.82;2015-09-05&quot;},{&quot;string value&quot;:&quot;1534673027;$140.93;2014-03-11&quot;},{&quot;string value&quot;:&quot;842468364;$104.26;2014-05-06&quot;}],&quot;genId&quot;:&quot;307655219&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(['../javascripts/notebook/playground','../javascripts/notebook/magic/tableChart'], \n      function(playground, _magictableChart) {\n        // data ==> data-this (in observable.js's scopedEval) ==> this in JS => { dataId, dataInit, ... }\n        // this ==> scope (in observable.js's scopedEval) ==> this.parentElement ==> div.container below (toHtml)\n\n        playground.call(data,\n                        this\n                        ,\n                        {\n    \"f\": _magictableChart,\n    \"o\": {\"headers\":[\"string value\"],\"width\":600,\"height\":400}\n  }\n  \n                        \n                        \n                      );\n      }\n    );/*]]>*/</script>\n    <div>\n        <label for=\"input-anone2f1f1ad2919b276cbd0edc438dc2a6d\">\n      Max Points\n    </label><input id=\"input-anone2f1f1ad2919b276cbd0edc438dc2a6d\" type=\"number\" name=\"input-anone2f1f1ad2919b276cbd0edc438dc2a6d\" data-bind=\"textInput: value, fireChange: true, valueUpdate: 'input'\">\n      <script data-selector=\"#input-anone2f1f1ad2919b276cbd0edc438dc2a6d\" data-this=\"{&quot;valueId&quot;:&quot;anone2f1f1ad2919b276cbd0edc438dc2a6d&quot;,&quot;valueInit&quot;:25}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/req(\n ['observable', 'knockout'],\n function (Observable, ko) {\n   //console.log(\"-----------\")\n   //console.dir(this);\n   //console.dir(valueId);\n   var obs = Observable.makeObservable(valueId)\n                       .extend({ rateLimit: { //throttle\n                                   timeout: 500,\n                                   method: \"notifyWhenChangesStop\"\n                                 }\n                               }\n                       );\n   ko.applyBindings({\n     value: obs\n   }, this);\n   obs(valueInit);\n }\n)/*]]>*/</script>\n    </input>\n        <p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anon8e30a6bbb9face3839a3af1bf9e9e16f&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p> <span style=\"color:red\"><p data-bind=\"text: value\"><script data-this=\"{&quot;valueId&quot;:&quot;anon24d37f778b088419814d2e9373ccdd96&quot;}\" type=\"text/x-scoped-javascript\">/*<![CDATA[*/\nreq(\n['observable', 'knockout'],\nfunction (O, ko) {\n  ko.applyBindings({\n      value: O.makeObservable(valueId)\n    },\n    this\n  );\n});\n        /*]]>*/</script></p></span>\n        <div>\n        </div>\n      </div></div></div></div></div>"
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 19
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "def jsonMaker(line: Array[String]): String = {\n  val phone = line match {\n                          case arr: Array[String] if (arr.size < 3) => \"(000) 000-0000\"\n//                           case arr: Array[String] if ({val w: String = arr(3).toString\n//                                                        w(0)} == '(') => line(3)\n//                           case _ => \"(000) 000-0000\"\n  }\n\n  \"{user_id:\"+ line(0)+\",name:\"+line(1)+\",email:\"+line(2)+\",phone:\"+phone+\"}\"\n}",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "jsonMaker: (line: Array[String])String\n"
+    }, {
+      "metadata" : { },
+      "data" : {
+        "text/html" : ""
+      },
+      "output_type" : "execute_result",
+      "execution_count" : 44
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : false
+    },
+    "cell_type" : "code",
+    "source" : "//{user_id: XXX, name: XXX, email:XXX, phone:XXX}\nusers.map(_.split(\";\")).map(x => jsonMaker(x)).take(3)",
+    "outputs" : [ {
+      "name" : "stdout",
+      "output_type" : "stream",
+      "text" : "org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 10.0 failed 1 times, most recent failure: Lost task 0.0 in stage 10.0 (TID 12, localhost): scala.MatchError: [Ljava.lang.String;@35e28fa9 (of class [Ljava.lang.String;)\n\tat .jsonMaker(<console>:53)\n\tat $anonfun$2.apply(<console>:57)\n\tat $anonfun$2.apply(<console>:57)\n\tat scala.collection.Iterator$$anon$11.next(Iterator.scala:370)\n\tat scala.collection.Iterator$$anon$10.next(Iterator.scala:354)\n\tat scala.collection.Iterator$class.foreach(Iterator.scala:742)\n\tat scala.collection.AbstractIterator.foreach(Iterator.scala:1194)\n\tat scala.collection.generic.Growable$class.$plus$plus$eq(Growable.scala:59)\n\tat scala.collection.mutable.ArrayBuffer.$plus$plus$eq(ArrayBuffer.scala:104)\n\tat scala.collection.mutable.ArrayBuffer.$plus$plus$eq(ArrayBuffer.scala:48)\n\tat scala.collection.TraversableOnce$class.to(TraversableOnce.scala:308)\n\tat scala.collection.AbstractIterator.to(Iterator.scala:1194)\n\tat scala.collection.TraversableOnce$class.toBuffer(TraversableOnce.scala:300)\n\tat scala.collection.AbstractIterator.toBuffer(Iterator.scala:1194)\n\tat scala.collection.TraversableOnce$class.toArray(TraversableOnce.scala:287)\n\tat scala.collection.AbstractIterator.toArray(Iterator.scala:1194)\n\tat org.apache.spark.rdd.RDD$$anonfun$take$1$$anonfun$28.apply(RDD.scala:1314)\n\tat org.apache.spark.rdd.RDD$$anonfun$take$1$$anonfun$28.apply(RDD.scala:1314)\n\tat org.apache.spark.SparkContext$$anonfun$runJob$5.apply(SparkContext.scala:1858)\n\tat org.apache.spark.SparkContext$$anonfun$runJob$5.apply(SparkContext.scala:1858)\n\tat org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:66)\n\tat org.apache.spark.scheduler.Task.run(Task.scala:89)\n\tat org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:213)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)\n\tat java.lang.Thread.run(Thread.java:745)\n\nDriver stacktrace:\n  at org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1431)\n  at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1419)\n  at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1418)\n  at scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)\n  at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)\n  at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:1418)\n  at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:799)\n  at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:799)\n  at scala.Option.foreach(Option.scala:257)\n  at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:799)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:1640)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1599)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1588)\n  at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:48)\n  at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:620)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:1832)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:1845)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:1858)\n  at org.apache.spark.rdd.RDD$$anonfun$take$1.apply(RDD.scala:1314)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:150)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:111)\n  at org.apache.spark.rdd.RDD.withScope(RDD.scala:316)\n  at org.apache.spark.rdd.RDD.take(RDD.scala:1288)\n  ... 33 elided\nCaused by: scala.MatchError: [Ljava.lang.String;@35e28fa9 (of class [Ljava.lang.String;)\n  at .jsonMaker(<console>:53)\n  at $anonfun$2.apply(<console>:57)\n  at $anonfun$2.apply(<console>:57)\n  at scala.collection.Iterator$$anon$11.next(Iterator.scala:370)\n  at scala.collection.Iterator$$anon$10.next(Iterator.scala:354)\n  at scala.collection.Iterator$class.foreach(Iterator.scala:742)\n  at scala.collection.AbstractIterator.foreach(Iterator.scala:1194)\n  at scala.collection.generic.Growable$class.$plus$plus$eq(Growable.scala:59)\n  at scala.collection.mutable.ArrayBuffer.$plus$plus$eq(ArrayBuffer.scala:104)\n  at scala.collection.mutable.ArrayBuffer.$plus$plus$eq(ArrayBuffer.scala:48)\n  at scala.collection.TraversableOnce$class.to(TraversableOnce.scala:308)\n  at scala.collection.AbstractIterator.to(Iterator.scala:1194)\n  at scala.collection.TraversableOnce$class.toBuffer(TraversableOnce.scala:300)\n  at scala.collection.AbstractIterator.toBuffer(Iterator.scala:1194)\n  at scala.collection.TraversableOnce$class.toArray(TraversableOnce.scala:287)\n  at scala.collection.AbstractIterator.toArray(Iterator.scala:1194)\n  at org.apache.spark.rdd.RDD$$anonfun$take$1$$anonfun$28.apply(RDD.scala:1314)\n  at org.apache.spark.rdd.RDD$$anonfun$take$1$$anonfun$28.apply(RDD.scala:1314)\n  at org.apache.spark.SparkContext$$anonfun$runJob$5.apply(SparkContext.scala:1858)\n  at org.apache.spark.SparkContext$$anonfun$runJob$5.apply(SparkContext.scala:1858)\n  at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:66)\n  at org.apache.spark.scheduler.Task.run(Task.scala:89)\n  at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:213)\n  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)\n  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)\n  at java.lang.Thread.run(Thread.java:745)\n"
+    } ]
+  }, {
+    "metadata" : {
+      "trusted" : true,
+      "input_collapsed" : false,
+      "collapsed" : true
+    },
+    "cell_type" : "code",
+    "source" : "",
+    "outputs" : [ ]
+  } ],
+  "nbformat" : 4
+}
